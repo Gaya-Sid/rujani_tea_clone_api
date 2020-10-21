@@ -1,8 +1,6 @@
 const Sequelize = require("sequelize");
 const config = require("./config");
 
-console.log(config)
-
 const sequelize = new Sequelize(
   config.development.database,
   config.development.username,
@@ -25,7 +23,7 @@ sequelize
 
 sequelize
   .sync({
-    logging: console.log
+    logging: console.log,
   })
   .then(() => {
     console.log("Connection to Database successful!");
