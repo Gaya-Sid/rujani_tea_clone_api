@@ -24,6 +24,10 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use("/api", productRoutes);
 
+app.get("/", (req, res) => {
+  res.json({ getAllProducts: "/api/products" });
+});
+
 const port = process.env.PORT || 3002;
 app.listen(port, () => {
   console.log(`Server running at ${port}`);

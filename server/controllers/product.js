@@ -40,7 +40,9 @@ exports.getProducts = async (req, res) => {
 };
 
 // Get product by id
-exports.getProducts = async (req, res) => {
+exports.getProductById = async (req, res) => {
+  res.send(`product detail, ${req.params.id}`);
+
   // const products = await product
   //   .findAll({
   //     include: [
