@@ -5,64 +5,82 @@ const { user, address, state, city } = require("./user");
 const { category } = require("./category");
 const { order, order_item, transaction } = require("./order");
 
-const product = connection.define("product", {
-  id: {
-    type: Sequelize.INTEGER,
-    allowNull: false,
-    primaryKey: true,
-    autoIncrement: true,
+const product = connection.define(
+  "product",
+  {
+    id: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    name: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    price: {
+      type: Sequelize.FLOAT,
+      allowNull: false,
+    },
+    desc: {
+      type: Sequelize.TEXT,
+    },
+    manufactured_date: {
+      type: Sequelize.STRING,
+    },
+    stock: {
+      type: Sequelize.INTEGER,
+    },
   },
-  name: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  price: {
-    type: Sequelize.FLOAT,
-    allowNull: false,
-  },
-  desc: {
-    type: Sequelize.TEXT,
-  },
-  manufactured_date: {
-    type: Sequelize.STRING,
-  },
-  stock: {
-    type: Sequelize.INTEGER,
-  },
-});
+  {
+    timestamps: false,
+  }
+);
 
-const product_metaData = connection.define("product_metaData", {
-  id: {
-    type: Sequelize.INTEGER,
-    allowNull: false,
-    primaryKey: true,
-    autoIncrement: true,
+const product_metaData = connection.define(
+  "product_metaData",
+  {
+    id: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    key: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    value: {
+      type: Sequelize.FLOAT,
+      allowNull: false,
+    },
   },
-  key: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  value: {
-    type: Sequelize.FLOAT,
-    allowNull: false,
-  },
-});
+  {
+    timestamps: false,
+  }
+);
 
-const media = connection.define("media", {
-  id: {
-    type: Sequelize.INTEGER,
-    allowNull: false,
-    primaryKey: true,
-    autoIncrement: true,
+const media = connection.define(
+  "media",
+  {
+    id: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    url: {
+      type: Sequelize.TEXT,
+      allowNull: false,
+    },
+    resource_id: {
+      type: Sequelize.STRING,
+    },
   },
-  url: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  resource_id: {
-    type: Sequelize.STRING,
-  },
-});
+  {
+    timestamps: false,
+  }
+);
 
 product.hasMany(product_metaData);
 product_metaData.belongsTo(product);
