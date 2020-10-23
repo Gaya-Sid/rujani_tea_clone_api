@@ -1,5 +1,11 @@
 const Sequelize = require("sequelize");
 const connection = require("../config/connection");
+const {
+  product,
+  product_metaData,
+  media,
+  category_has_product,
+} = require("./product");
 
 const category = connection.define(
   "category",

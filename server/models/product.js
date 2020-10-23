@@ -82,14 +82,49 @@ const media = connection.define(
   }
 );
 
+const category_has_product = connection.define(
+  "category_has_product",
+  {
+    id: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    productId: {
+      type: Sequelize.INTEGER,
+      references: {
+        model: product,
+        key: "id",
+      },
+    },
+    categoryId: {
+      type: Sequelize.INTEGER,
+      references: {
+        model: category,
+        key: "id",
+      },
+    },
+  },
+  {
+    timestamps: false,
+  }
+);
+
 product.hasMany(product_metaData);
 product_metaData.belongsTo(product);
 
 product.hasMany(media);
 media.belongsTo(product);
 
-product.belongsToMany(category, { through: "category_has_product" });
-category.belongsToMany(product, { through: "category_has_product" });
+product.hasMany(category_has_product);
+category_has_product.belongsTo(product);
+
+// product.belongsToMany(category, { through: "category_has_product" });
+// category.belongsToMany(product, { through: "category_has_product" });
+
+category.hasMany(category_has_product);
+category_has_product.belongsTo(category);
 
 product.hasMany(order_item);
 order_item.belongsTo(product);
@@ -101,4 +136,5 @@ module.exports = {
   product,
   product_metaData,
   media,
+  category_has_product,
 };

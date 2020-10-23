@@ -16,6 +16,7 @@ const { order, order_item, transaction } = require("./models/order");
 
 // routes
 const productRoutes = require("./routes/product");
+const categoryRoutes = require("./routes/category");
 
 // middleware
 app.use(morgan("dev"));
@@ -23,9 +24,15 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
 app.use("/api", productRoutes);
+app.use("/api", categoryRoutes);
 
 app.get("/", (req, res) => {
-  res.json({ getAllProducts: "/api/products" });
+  res.json({
+    getAllProducts: "/api/products",
+    getProductById: "/api/product/:id",
+    getCategories: "/api/categories",
+    getCategories: "/api/category/:id",
+  });
 });
 
 const port = process.env.PORT || 3002;
