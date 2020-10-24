@@ -30,7 +30,7 @@ exports.getProducts = async (req, res) => {
                 {},
                 {
                   url: image.url,
-                  resource_id: image.resource_id,
+                  resource_id: product.id,
                 }
               );
             }),

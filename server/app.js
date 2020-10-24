@@ -17,6 +17,7 @@ const { order, order_item, transaction } = require("./models/order");
 // routes
 const productRoutes = require("./routes/product");
 const categoryRoutes = require("./routes/category");
+const userRoutes = require("./routes/user");
 
 // middleware
 app.use(morgan("dev"));
@@ -25,13 +26,14 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use("/api", productRoutes);
 app.use("/api", categoryRoutes);
+app.use("/api", userRoutes);
 
 app.get("/", (req, res) => {
   res.json({
     getAllProducts: "/api/products",
     getProductById: "/api/product/:id",
     getCategories: "/api/categories",
-    getCategories: "/api/category/:id",
+    getProductsInCategory: "/api/category/:id",
   });
 });
 

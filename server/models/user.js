@@ -5,78 +5,102 @@ const { product, product_metaData, media } = require("./product");
 const { category } = require("./category");
 const { order, order_item, transaction } = require("./order");
 
-const user = connection.define("user", {
-  id: {
-    type: Sequelize.INTEGER,
-    allowNull: false,
-    primaryKey: true,
-    autoIncrement: true,
+const user = connection.define(
+  "user",
+  {
+    id: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    first_name: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    last_name: {
+      type: Sequelize.STRING,
+    },
+    email: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    password: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    phone: {
+      type: Sequelize.INTEGER,
+    },
   },
-  first_name: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  last_name: {
-    type: Sequelize.STRING,
-  },
-  email: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  password: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  phone: {
-    type: Sequelize.INTEGER,
-  },
-});
+  {
+    timestamps: false,
+  }
+);
 
-const address = connection.define("address", {
-  id: {
-    type: Sequelize.INTEGER,
-    allowNull: false,
-    primaryKey: true,
-    autoIncrement: true,
+const address = connection.define(
+  "address",
+  {
+    id: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    addr1: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    addr2: {
+      type: Sequelize.STRING,
+    },
   },
-  addr1: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  addr2: {
-    type: Sequelize.STRING,
-  },
-});
+  {
+    timestamps: false,
+  }
+);
 
-const state = connection.define("state", {
-  id: {
-    type: Sequelize.INTEGER,
-    allowNull: false,
-    primaryKey: true,
-    autoIncrement: true,
+const state = connection.define(
+  "state",
+  {
+    id: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    state: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
   },
-  state: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-});
+  {
+    timestamps: false,
+  }
+);
 
-const city = connection.define("city", {
-  id: {
-    type: Sequelize.INTEGER,
-    allowNull: false,
-    primaryKey: true,
-    autoIncrement: true,
+const city = connection.define(
+  "city",
+  {
+    id: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    city_name: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    zip_code: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+    },
   },
-  city_name: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  zip_code: {
-    type: Sequelize.INTEGER,
-    allowNull: false,
-  },
-});
+  {
+    timestamps: false,
+  }
+);
 
 user.hasMany(order);
 order.belongsTo(user);
