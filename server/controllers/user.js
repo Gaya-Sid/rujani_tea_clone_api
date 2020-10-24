@@ -14,13 +14,36 @@ exports.createUser = async (req, res) => {
           phone: req.body.phone,
           address: [
             {
-              addr1: "no address",
-              addr2: "no addr2",
+              addr1: "",
+              addr2: "",
+              city: [
+                {
+                  city_name: "",
+                  zip_code: 0,
+                },
+              ],
+              state: [
+                {
+                  state: "",
+                },
+              ],
             },
           ],
         },
         {
-          include: [address],
+          include: [
+            {
+              model: address,
+              include: [
+                {
+                  model: city,
+                },
+                {
+                  model: state,
+                },
+              ],
+            },
+          ],
         }
       )
       .then((data) => {
@@ -33,51 +56,102 @@ exports.createUser = async (req, res) => {
   }
 };
 
-// post add address :
-exports.addUserInfo = async (req, res) => {
-  // address.create(
-  //   {
-  //     address: [{ name: "Alpha" }, { name: "Beta" }],
-  //   },
-  //   {
-  //     include: [Tag],
-  //   }
-  // );
-  // user
-  //   .findOne({ where: { id: req.params.id } })
-  //   .then((record) => {
-  //     if (!record) {
-  //       throw new Error("No user found!");
-  //     }
-  //     console.log(`retrieved record ${JSON.stringify(record, null, 2)}`);
-  //     let address = {
-  //       addr1: "204, snn raj apartment, ranka colony road",
-  //       addr2: "bilekahlli",
-  //     };
-  //     record.update(values).then((updatedRecord) => {
-  //       console.log(`updated record ${JSON.stringify(updatedRecord, null, 2)}`);
-  //       // login into your DB and confirm update
-  //     });
-  //   })
-  //   .catch((error) => {
-  //     // do seomthing with the error
-  //     throw new Error(error);
-  //   });
-  // try {
-  //   const newUser = await user
-  //     .create({
-  //       first_name: req.body.firstName,
-  //       last_name: req.body.lastName,
-  //       email: req.body.email,
-  //       password: req.body.password,
-  //       phone: req.body.phone,
-  //     })
-  //     .then((data) => {
-  //       console.log(data);
-  //       res.json(data);
-  //     })
-  //     .catch((err) => console.error(err.message));
-  // } catch {
-  //   res.json("Failed to add user info!");
-  // }
+// Update address :
+exports.updateUserInfo = async (req, res) => {
+  console.log(req.body);
+  try {
+    let status = {
+      updatedAddress: false,
+      updatedCity: false,
+      updatedState: false,
+    };
+    address
+      .update(
+        {
+          addr1: req.body.addr1,
+          addr2: req.body.addr2,
+        },
+        {
+          where: {
+            id: parseInt(req.params.id),
+          },
+        }
+      )
+      .then((data) => {
+        status.updatedAddress = true;
+        city
+          .update(
+            {
+              city_name: req.body.city,
+              zip_code: parseInt(req.body.zip),
+            },
+            {
+              where: {
+                id: parseInt(req.params.id),
+              },
+            }
+          )
+          .catch((err) => console.error(err.message));
+        state
+          .update(
+            {
+              state: req.body.state,
+            },
+            {
+              where: {
+                id: parseInt(req.params.id),
+              },
+            }
+          )
+          .catch((err) => console.error(err.message));
+      })
+      .then((data) => {
+        status.updatedCity = true;
+        status.updatedState = true;
+        res.json(status);
+      })
+      .catch((err) => console.error(err.message));
+  } catch {
+    res.json("Failed to update user address!");
+  }
+};
+
+// Get user
+exports.getUser = async (req, res) => {
+  const allCategories = await user
+    .findAll({
+      where: {
+        id: req.params.id,
+      },
+      include: [
+        {
+          model: address,
+          include: [
+            {
+              model: state,
+            },
+            {
+              model: city,
+            },
+          ],
+        },
+      ],
+    })
+    .then((user) => {
+      let userData = {
+        id: user[0].id,
+        firstName: user[0].first_name,
+        lastName: user[0].last_name,
+        email: user[0].email,
+        phone: user[0].phone,
+        address: {
+          addr1: user[0].address.addr1,
+          addr2: user[0].address.addr2,
+          city: user[0].address.city.city_name,
+          zip: user[0].address.city.zip_code,
+        },
+      };
+      res.json(userData);
+    })
+    .catch((err) => console.error(err.message));
 };

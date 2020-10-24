@@ -48,10 +48,28 @@ exports.getProducts = async (req, res) => {
 // Get product by id
 exports.getProductById = async (req, res) => {
   const p = await product
-    .findByPk(req.params.id)
-    .then((data) => {
-      console.log(data);
-      res.json(data);
+    .findAll({
+      where: {
+        id: req.params.id,
+      },
+      include: [
+        {
+          model: media,
+        },
+      ],
+    })
+    .then((p) => {
+      let productData = {
+        id: p[0].id,
+        name: p[0].name,
+        price: p[0].price,
+        desc: p[0].desc,
+        manufactured_date: p[0].manufactured_date,
+        stock: p[0].stock,
+        url1: p[0].media[0].url,
+        url2: p[0].media[1].url,
+      };
+      res.json(productData);
     })
     .catch((err) => console.error(err.message));
 };
