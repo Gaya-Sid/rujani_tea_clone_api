@@ -68,6 +68,8 @@ exports.getProductById = async (req, res) => {
         stock: p[0].stock,
         url1: p[0].media[0].url,
         url2: p[0].media[1].url,
+        taste: "Sparkling/Robust",
+        recommendedTime: "Morning",
       };
       res.json(productData);
     })
