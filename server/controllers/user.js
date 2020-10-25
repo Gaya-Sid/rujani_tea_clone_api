@@ -1,8 +1,14 @@
 const { category } = require("../models/category");
 const { user, address, state, city } = require("../models/user");
+const { check, validationResult } = require("express-validator");
 
 // post : create user
 exports.createUser = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() });
+  }
+
   try {
     const newUser = await user
       .create(
@@ -118,40 +124,45 @@ exports.updateUserInfo = async (req, res) => {
 
 // Get user
 exports.getUser = async (req, res) => {
-  const allCategories = await user
-    .findAll({
-      where: {
-        id: req.params.id,
-      },
-      include: [
-        {
-          model: address,
-          include: [
-            {
-              model: state,
-            },
-            {
-              model: city,
-            },
-          ],
+  try {
+    const allCategories = await user
+      .findAll({
+        where: {
+          id: req.params.id,
         },
-      ],
-    })
-    .then((user) => {
-      let userData = {
-        id: user[0].id,
-        firstName: user[0].first_name,
-        lastName: user[0].last_name,
-        email: user[0].email,
-        phone: user[0].phone,
-        address: {
-          addr1: user[0].address.addr1,
-          addr2: user[0].address.addr2,
-          city: user[0].address.city.city_name,
-          zip: user[0].address.city.zip_code,
-        },
-      };
-      res.json(userData);
-    })
-    .catch((err) => console.error(err.message));
+        include: [
+          {
+            model: address,
+            include: [
+              {
+                model: state,
+              },
+              {
+                model: city,
+              },
+            ],
+          },
+        ],
+      })
+      .then((user) => {
+        let userData = {
+          id: user[0].id,
+          firstName: user[0].first_name,
+          lastName: user[0].last_name,
+          email: user[0].email,
+          phone: user[0].phone,
+          address: {
+            addr1: user[0].address.addr1,
+            addr2: user[0].address.addr2,
+            city: user[0].address.city.city_name,
+            zip: user[0].address.city.zip_code,
+          },
+        };
+        res.json(userData);
+      })
+      .catch((err) => console.error(err.message));
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
 };
