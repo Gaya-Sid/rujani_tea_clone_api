@@ -32,6 +32,9 @@ const user = connection.define(
     phone: {
       type: Sequelize.INTEGER,
     },
+    token: {
+      type: Sequelize.STRING,
+    },
   },
   {
     timestamps: false,

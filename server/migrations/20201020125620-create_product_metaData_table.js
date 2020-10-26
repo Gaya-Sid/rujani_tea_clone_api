@@ -14,7 +14,7 @@ module.exports = {
         allowNull: false,
       },
       value: {
-        type: Sequelize.FLOAT,
+        type: Sequelize.STRING,
         allowNull: false,
       },
     });

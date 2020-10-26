@@ -62,6 +62,9 @@ exports.getProductById = async (req, res) => {
           {
             model: media,
           },
+          {
+            model: product_metaData,
+          },
         ],
       })
       .then((p) => {
@@ -74,8 +77,8 @@ exports.getProductById = async (req, res) => {
           stock: p[0].stock,
           url1: p[0].media[0].url,
           url2: p[0].media[1].url,
-          taste: "Sparkling/Robust",
-          recommendedTime: "Morning",
+          taste: p[0].product_metaData[0].value,
+          recommendedTime: p[0].product_metaData[1].value,
         };
         res.json(productData);
       })

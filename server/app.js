@@ -1,7 +1,6 @@
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
-const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const cors = require("cors");
 
@@ -24,7 +23,6 @@ const userRoutes = require("./routes/user");
 app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cookieParser());
 app.use(cors());
 app.use("/api", productRoutes);
 app.use("/api", categoryRoutes);
