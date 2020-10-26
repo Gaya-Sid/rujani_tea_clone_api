@@ -3,7 +3,12 @@ const router = express.Router();
 
 const { check } = require("express-validator");
 
-const { getUser, createUser, updateUserInfo } = require("../controllers/user");
+const {
+  getUser,
+  registerUser,
+  updateUserInfo,
+  loginUser,
+} = require("../controllers/user");
 
 router.get("/user/:id", getUser);
 router.post(
@@ -24,9 +29,10 @@ router.post(
       .isEmpty()
       .isLength({ min: 6 }),
   ],
-  createUser
+  registerUser
 );
 
 router.put("/user/:id/info", updateUserInfo);
+router.post("/user/login", loginUser);
 
 module.exports = router;

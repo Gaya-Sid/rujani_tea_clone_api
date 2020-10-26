@@ -1,9 +1,13 @@
 const { category } = require("../models/category");
 const { user, address, state, city } = require("../models/user");
-const { check, validationResult } = require("express-validator");
+const { validationResult } = require("express-validator");
 
-// post : create user
-exports.createUser = async (req, res) => {
+const config = require("../config/auth.config");
+
+var jwt = require("jsonwebtoken");
+var bcrypt = require("bcrypt");
+
+exports.registerUser = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(422).json({ errors: errors.array() });
@@ -16,7 +20,7 @@ exports.createUser = async (req, res) => {
           first_name: req.body.firstName,
           last_name: req.body.lastName,
           email: req.body.email,
-          password: req.body.password,
+          password: bcrypt.hashSync(req.body.password, 8),
           phone: req.body.phone,
           address: [
             {
@@ -54,12 +58,83 @@ exports.createUser = async (req, res) => {
       )
       .then((data) => {
         console.log(data);
-        res.json(data);
+        res.json({ success: true });
       })
       .catch((err) => console.error(err.message));
   } catch {
     res.json("Failed to register user!");
   }
+};
+
+exports.loginUser = async (req, res) => {
+  user
+    .findOne({
+      where: {
+        email: req.body.email,
+      },
+      include: [
+        {
+          model: address,
+          include: [
+            {
+              model: state,
+            },
+            {
+              model: city,
+            },
+          ],
+        },
+      ],
+    })
+    .then((user) => {
+      if (!user) {
+        return res.status(404).send({ message: "User Not found." });
+      }
+
+      var passwordIsValid = bcrypt.compareSync(
+        req.body.password,
+        user.password
+      );
+
+      if (!passwordIsValid) {
+        return res.status(401).send({
+          accessToken: null,
+          message: "Invalid Password!",
+        });
+      }
+
+      let userData = {
+        id: user.id,
+        firstName: user.first_name,
+        lastName: user.last_name,
+        email: user.email,
+        phone: user.phone,
+        address: {
+          addr1: user.address.addr1,
+          addr2: user.address.addr2,
+          city: user.address.city.city_name,
+          zip: user.address.city.zip_code,
+        },
+      };
+
+      var token = jwt.sign({ id: user.id }, config.secret, {
+        expiresIn: 86400, // 24 hours
+      });
+
+      res.cookie("rt_auth", token, { maxAge: 86400 }).status(200).json({
+        loginSuccess: true,
+        user: userData,
+      });
+
+      // res.status(200).send({
+      //   id: user.id,
+      //   email: user.email,
+      //   accessToken: token,
+      // });
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+    });
 };
 
 // Update address :
