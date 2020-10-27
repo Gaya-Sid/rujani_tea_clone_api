@@ -19,11 +19,7 @@ router.post(
       .isEmpty()
       .isAlpha(),
     check("lastName", "Please enter valid last name").not().isEmpty().isAlpha(),
-    check("email", "Please include a valid email")
-      .not()
-      .isEmpty()
-      .isEmail()
-      .normalizeEmail(),
+    check("email", "Please include a valid email").not().isEmpty().isEmail(),
     check("password", "Please enter a password with 6 or more characters")
       .not()
       .isEmpty()
