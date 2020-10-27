@@ -18,11 +18,13 @@ const { order, order_item, transaction } = require("./models/order");
 const productRoutes = require("./routes/product");
 const categoryRoutes = require("./routes/category");
 const userRoutes = require("./routes/user");
+const cookieParser = require("cookie-parser");
 
 // middleware
 app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(cookieParser());
 app.use(cors());
 app.use("/api", productRoutes);
 app.use("/api", categoryRoutes);

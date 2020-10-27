@@ -20,8 +20,8 @@ let verifyToken = (req, res, next) => {
   });
 };
 
-const authJwt = {
-  verifyToken: verifyToken,
-};
+// const authJwt = {
+//   verifyToken: verifyToken,
+// };
 
-module.exports = authJwt;
+module.exports = auth;

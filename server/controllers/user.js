@@ -67,6 +67,8 @@ exports.registerUser = async (req, res) => {
 };
 
 exports.loginUser = async (req, res) => {
+  console.log(req.cookies);
+
   user
     .findOne({
       where: {
