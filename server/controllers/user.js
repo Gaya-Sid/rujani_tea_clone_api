@@ -68,75 +68,78 @@ exports.registerUser = async (req, res) => {
 
 exports.loginUser = async (req, res) => {
   console.log(req.cookies, req.body);
-
-  user
-    .findOne({
-      where: {
-        email: req.body.email,
-      },
-      include: [
-        {
-          model: address,
-          include: [
-            {
-              model: state,
-            },
-            {
-              model: city,
-            },
-          ],
+  try {
+    user
+      .findOne({
+        where: {
+          email: req.body.email,
         },
-      ],
-    })
-    .then((user) => {
-      if (!user) {
-        return res.status(404).send({ message: "User Not found." });
-      }
+        include: [
+          {
+            model: address,
+            include: [
+              {
+                model: state,
+              },
+              {
+                model: city,
+              },
+            ],
+          },
+        ],
+      })
+      .then((user) => {
+        if (!user) {
+          return res.status(404).send({ message: "User Not found." });
+        }
 
-      var passwordIsValid = bcrypt.compareSync(
-        req.body.password,
-        user.password
-      );
+        var passwordIsValid = bcrypt.compareSync(
+          req.body.password,
+          user.password
+        );
 
-      if (!passwordIsValid) {
-        return res.status(401).send({
-          accessToken: null,
-          message: "Invalid Password!",
+        if (!passwordIsValid) {
+          return res.status(401).send({
+            accessToken: null,
+            message: "Invalid Password!",
+          });
+        }
+
+        let userData = {
+          id: user.id,
+          firstName: user.first_name,
+          lastName: user.last_name,
+          email: user.email,
+          phone: user.phone,
+          address: {
+            addr1: user.address.addr1,
+            addr2: user.address.addr2,
+            city: user.address.city.city_name,
+            zip: user.address.city.zip_code,
+          },
+        };
+
+        var token = jwt.sign({ id: user.id }, config.secret, {
+          expiresIn: 86400, // 24 hours
         });
-      }
 
-      let userData = {
-        id: user.id,
-        firstName: user.first_name,
-        lastName: user.last_name,
-        email: user.email,
-        phone: user.phone,
-        address: {
-          addr1: user.address.addr1,
-          addr2: user.address.addr2,
-          city: user.address.city.city_name,
-          zip: user.address.city.zip_code,
-        },
-      };
+        res.cookie("rt_auth", token, { maxAge: 86400 }).status(200).json({
+          loginSuccess: true,
+          user: userData,
+        });
 
-      var token = jwt.sign({ id: user.id }, config.secret, {
-        expiresIn: 86400, // 24 hours
+        // res.status(200).send({
+        //   id: user.id,
+        //   email: user.email,
+        //   accessToken: token,
+        // });
+      })
+      .catch((err) => {
+        res.status(500).send({ message: err.message, msg: "hello kirtesh" });
       });
-
-      res.cookie("rt_auth", token, { maxAge: 86400 }).status(200).json({
-        loginSuccess: true,
-        user: userData,
-      });
-
-      // res.status(200).send({
-      //   id: user.id,
-      //   email: user.email,
-      //   accessToken: token,
-      // });
-    })
-    .catch((err) => {
-      res.status(500).send({ message: err.message });
-    });
+  } catch (err) {
+    res.json("login failed...");
+  }
 };
 
 // Update address :
@@ -242,4 +245,8 @@ exports.getUser = async (req, res) => {
     console.error(err.message);
     res.status(500).send("Server Error");
   }
+};
+
+exports.logoutUser = async () => {
+  res.json("hit it");
 };

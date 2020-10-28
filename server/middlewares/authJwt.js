@@ -1,8 +1,10 @@
 const jwt = require("jsonwebtoken");
 const config = require("../config/auth.config.js");
 
-let verifyToken = (req, res, next) => {
+const auth = (req, res, next) => {
   let token = req.cookies.rt_auth;
+
+  console.log(req.cookies.rt_auth);
 
   if (!token) {
     return res.status(403).send({
@@ -24,4 +26,4 @@ let verifyToken = (req, res, next) => {
 //   verifyToken: verifyToken,
 // };
 
-module.exports = auth;
+module.exports = { auth };
