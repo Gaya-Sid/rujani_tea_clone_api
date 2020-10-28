@@ -123,7 +123,7 @@ exports.loginUser = async (req, res) => {
           expiresIn: 86400, // 24 hours
         });
 
-        res.cookie("rt_auth", token, { maxAge: 8640000 }).status(200).json({
+        res.cookie("rt_auth", token, { maxAge: 86400000 }).status(200).json({
           loginSuccess: true,
           user: userData,
         });
