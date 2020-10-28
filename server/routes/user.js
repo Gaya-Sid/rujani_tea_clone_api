@@ -37,7 +37,7 @@ router.get("/logout", auth, logoutUser);
 router.get("/auth", auth, (req, res) => {
   res.status(200).json({
     isAuth: true,
-    user: "I will add route",
+    user: "I will add userInfo",
   });
 });
 
