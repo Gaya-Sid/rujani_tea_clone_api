@@ -114,6 +114,7 @@ exports.loginUser = async (req, res) => {
           address: {
             addr1: user.address.addr1,
             addr2: user.address.addr2,
+            state: user.address.state.state,
             city: user.address.city.city_name,
             zip: user.address.city.zip_code,
           },

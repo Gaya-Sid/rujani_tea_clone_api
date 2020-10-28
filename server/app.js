@@ -26,6 +26,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(cors());
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Credentials", "Access-Control-Allow-Origin");
+  next();
+});
 app.use("/api", productRoutes);
 app.use("/api", categoryRoutes);
 app.use("/api", userRoutes);
