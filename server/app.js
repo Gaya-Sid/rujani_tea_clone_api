@@ -25,16 +25,7 @@ app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use(
-  cors({
-    origin: [
-      "http://localhost:3000",
-      "http://localhost:3002",
-      "https://rujanitea.netlify.app/",
-    ],
-    credentials: true,
-  })
-);
+app.use(cors());
 app.use("/api", productRoutes);
 app.use("/api", categoryRoutes);
 app.use("/api", userRoutes);
