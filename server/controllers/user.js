@@ -151,7 +151,6 @@ exports.loginUser = async (req, res) => {
 
 // Update address :
 exports.updateUserInfo = async (req, res) => {
-  console.log(req.body);
   try {
     address
       .update(
@@ -161,12 +160,11 @@ exports.updateUserInfo = async (req, res) => {
         },
         {
           where: {
-            id: parseInt(req.body.id),
+            id: parseInt(req.params.id),
           },
         }
       )
       .then((data) => {
-        status.updatedAddress = true;
         city
           .update(
             {
@@ -175,7 +173,7 @@ exports.updateUserInfo = async (req, res) => {
             },
             {
               where: {
-                id: parseInt(req.body.id),
+                id: parseInt(req.params.id),
               },
             }
           )
