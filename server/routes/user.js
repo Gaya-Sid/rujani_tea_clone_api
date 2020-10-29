@@ -10,6 +10,7 @@ const {
   updateUserInfo,
   loginUser,
   logoutUser,
+  verifyAuth,
 } = require("../controllers/user");
 
 router.get("/user/:id", getUser);
@@ -34,11 +35,6 @@ router.put("/user/:id", updateUserInfo);
 router.post("/user/login", loginUser);
 router.get("/logout", auth, logoutUser);
 
-router.get("/auth", auth, (req, res) => {
-  res.status(200).json({
-    isAuth: true,
-    user: "I will add userInfo",
-  });
-});
+router.get("/auth/:id", auth, verifyAuth);
 
 module.exports = router;

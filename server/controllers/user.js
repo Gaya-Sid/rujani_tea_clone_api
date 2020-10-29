@@ -90,7 +90,9 @@ exports.loginUser = async (req, res) => {
       })
       .then((user) => {
         if (!user) {
-          return res.status(404).send({ message: "User Not found." });
+          return res
+            .status(404)
+            .json({ message: "User Not found!", loginFailed: true });
         }
 
         var passwordIsValid = bcrypt.compareSync(
@@ -145,7 +147,7 @@ exports.loginUser = async (req, res) => {
         res.status(500).send({ message: err.message, msg: "hello kirtesh" });
       });
   } catch (err) {
-    res.json("login failed...");
+    res.json({ message: "login failed!" });
   }
 };
 
@@ -195,7 +197,7 @@ exports.updateUserInfo = async (req, res) => {
         res.json(req.body);
       })
       .catch((err) => console.error(err.message));
-  } catch {
+  } catch (err) {
     res.json("Failed to update user address!");
   }
 };
@@ -245,6 +247,53 @@ exports.getUser = async (req, res) => {
   }
 };
 
-exports.logoutUser = async () => {
+exports.logoutUser = async (req, res) => {
   res.json("hit it");
+};
+
+exports.verifyAuth = async (req, res) => {
+  try {
+    const getUser = await user
+      .findAll({
+        where: {
+          id: req.id,
+        },
+        include: [
+          {
+            model: address,
+            include: [
+              {
+                model: state,
+              },
+              {
+                model: city,
+              },
+            ],
+          },
+        ],
+      })
+      .then((user) => {
+        let userData = {
+          id: user[0].id,
+          firstName: user[0].first_name,
+          lastName: user[0].last_name,
+          email: user[0].email,
+          phone: user[0].phone,
+          address: {
+            addr1: user[0].address.addr1,
+            addr2: user[0].address.addr2,
+            city: user[0].address.city.city_name,
+            zip: user[0].address.city.zip_code,
+          },
+        };
+        res.json({
+          isAuth: true,
+          userData,
+        });
+      })
+      .catch((err) => console.error(err.message));
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
 };

@@ -12,21 +12,23 @@ const auth = (req, res, next) => {
   //   res.json({ message: "Unauthorized!" });
   // }
 
-  let token = req.headers["x-access-token"];
+  let token = req.headers["rt_token"];
 
   if (!token) {
-    return res.status(403).send({
+    return res.status(403).json({
       message: "No token provided!",
+      isAuth: false,
     });
   }
 
   jwt.verify(token, config.secret, (err, decoded) => {
     if (err) {
-      return res.status(401).send({
+      return res.status(401).json({
         message: "Unauthorized!",
+        isAuth: false,
       });
     }
-    req.userId = decoded.id;
+    req.id = decoded.id;
     next();
   });
 };
