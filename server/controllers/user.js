@@ -124,9 +124,15 @@ exports.loginUser = async (req, res) => {
           expiresIn: 86400, // 24 hours
         });
 
-        res.cookie("rt_auth", token, { maxAge: 86400000 }).status(200).json({
-          loginSuccess: true,
+        // res.cookie("rt_auth", token, { maxAge: 86400000 }).status(200).json({
+        //   loginSuccess: true,
+        //   user: userData,
+        // });
+
+        res.status(200).json({
           user: userData,
+          accessToken: token,
+          loginSuccess: true,
         });
 
         // res.status(200).send({
@@ -147,11 +153,6 @@ exports.loginUser = async (req, res) => {
 exports.updateUserInfo = async (req, res) => {
   console.log(req.body);
   try {
-    let status = {
-      updatedAddress: false,
-      updatedCity: false,
-      updatedState: false,
-    };
     address
       .update(
         {
@@ -160,7 +161,7 @@ exports.updateUserInfo = async (req, res) => {
         },
         {
           where: {
-            id: parseInt(req.params.id),
+            id: parseInt(req.body.id),
           },
         }
       )
@@ -174,7 +175,7 @@ exports.updateUserInfo = async (req, res) => {
             },
             {
               where: {
-                id: parseInt(req.params.id),
+                id: parseInt(req.body.id),
               },
             }
           )
@@ -193,9 +194,7 @@ exports.updateUserInfo = async (req, res) => {
           .catch((err) => console.error(err.message));
       })
       .then((data) => {
-        status.updatedCity = true;
-        status.updatedState = true;
-        res.json(status);
+        res.json(req.body);
       })
       .catch((err) => console.error(err.message));
   } catch {

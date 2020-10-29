@@ -30,7 +30,7 @@ router.post(
   registerUser
 );
 
-router.put("/user/:id/info", updateUserInfo);
+router.put("/user/:id", updateUserInfo);
 router.post("/user/login", loginUser);
 router.get("/logout", auth, logoutUser);
 
