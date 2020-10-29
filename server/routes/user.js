@@ -35,6 +35,6 @@ router.put("/user/:id", updateUserInfo);
 router.post("/user/login", loginUser);
 router.get("/logout", auth, logoutUser);
 
-router.get("/auth/:id", auth, verifyAuth);
+router.get("/auth", auth, verifyAuth);
 
 module.exports = router;
